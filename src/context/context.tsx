@@ -4,7 +4,7 @@ import { useContext , createContext , useEffect, useState, ReactNode  } from 're
 import { db } from "../../lib/firebase";
 import { collection, getDocs } from "firebase/firestore";
 
-export interface GymClass {
+export interface IGymClass {
     id?:  string;
     name: string; 
     coach: string; 
@@ -18,14 +18,14 @@ export interface GymClass {
 }
 
 interface context {
-    classes : GymClass[]
+    classes : IGymClass[]
     refetch: () => Promise<void>;
 }
 
 const Context = createContext<context | undefined>(undefined)
 
 export const ContextProvider = ({children} : {children: ReactNode}) =>{
-    const [classes, setClasses] = useState<GymClass[]>([]);
+    const [classes, setClasses] = useState<IGymClass[]>([]);
 
   const fetchClasses = async () => {
     try {
@@ -33,7 +33,7 @@ export const ContextProvider = ({children} : {children: ReactNode}) =>{
       const list = snapshot.docs.map(doc => ({
         id: doc.id,
         ...doc.data(),
-      })) as GymClass[];
+      })) as IGymClass[];
       setClasses(list);
     } catch (error) {
       console.error("خطا در دریافت کلاس‌ها:", error);
