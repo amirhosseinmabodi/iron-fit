@@ -3,6 +3,7 @@ import React, { useState } from 'react'
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { auth, db } from "../../../lib/firebase";
 import { doc, setDoc } from 'firebase/firestore';
+import { setCookie } from 'cookies-next';
 
 function register() {
     const [data , setsdata] = useState({
@@ -44,6 +45,7 @@ function register() {
                 gender : data.gender
             })
             console.log('succsesful');
+            setCookie('UID' , user.uid , {maxAge: 60 * 60 * 24 * 7} )
         }catch (err: any) {
             console.error(err.message || "somethings wrong");
         }
