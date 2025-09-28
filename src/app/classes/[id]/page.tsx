@@ -5,6 +5,7 @@ import React, { useEffect, useState } from "react";
 import { db } from "../../../../lib/firebase";
 import { IGymClass } from "@/context/context";
 import { getCookie } from "cookies-next";
+import { url } from "inspector";
 
 function classDetails() {
   const { id } = useParams();
@@ -43,32 +44,64 @@ function classDetails() {
 
     const data = snapshot.data();
     const reservedUsers = data.reservedUsers || [];
-    console.log('ascascasc',classDetails?.capacity - usersCount);
-    
+    console.log("ascascasc", classDetails?.capacity - usersCount);
+
     if (reservedUsers.includes(userId)) {
       console.warn("این کاربر قبلاً رزرو کرده!");
       return;
-    }else if (reservedUsers.length < (classDetails?.capacity - usersCount)) {
+    } else if (reservedUsers.length < classDetails?.capacity - usersCount) {
       console.warn("ظرفیت تکمیل");
       return;
-    }else{
+    } else {
       await updateDoc(classref, { reservedUsers: arrayUnion(userId) });
     }
   };
   const usersCount = classDetails?.reservedUsers?.length || 0;
   return (
     <div>
-      <img src={classDetails?.image} alt={classDetails?.name} />
-      <h1>{classDetails?.name}</h1>
-      <p>coach: {classDetails?.coach}</p>
-      <p>price:{classDetails?.price}</p>
-      <p>capacity:{(classDetails?.capacity as number) - usersCount}</p>
-      <p>duration:{classDetails?.duration}min</p>
-      <button
-        onClick={() => handleBooking(classDetails?.id as string, uid)}
+      <div
+        className="p-16 flex justify-center items-center flex-col h-96 text-center text-white"
+        style={{
+          backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)), url(${classDetails?.image})`,
+          backgroundSize: "cover",
+          backgroundPosition: "top center",
+          backgroundRepeat: "no-repeat",
+        }}
       >
-        booking
-      </button>
+        <h1 className="font-bold text-4xl">{classDetails?.name}</h1>
+        <p className="text-sm pt-4">with {classDetails?.coach}</p>
+      </div>
+      <div className="grid grid-cols-3 p-8 gap-12 justify-center items-center">
+        <div className="col-span-2 shadow-xl rounded-xl p-8">
+          <h2 className="text-2xl font-bold">Class Information</h2>
+          <div className="grid grid-cols-2 my-4">
+            <div>
+              <p>Duration</p>
+              <p>{classDetails?.duration} minutes</p>
+            </div>
+            <div>
+              <p>Schedule</p>
+              <p>
+                {classDetails?.reservedUsers?.length ?? 0}/
+                {classDetails?.capacity ?? 0}
+              </p>
+            </div>
+          </div>
+          <p>{classDetails?.description}</p>
+        </div>
+        <div>
+          <div className="shadow-xl rounded-xl p-8 flex flex-col justify-center items-center gap-8">
+            <p className="font-bold text-7xl text-orange-500">${classDetails?.price}</p>
+            <p className="text-2xl">capacity:{(classDetails?.capacity as number) - usersCount}</p>
+            <button
+            className="w-full bg-orange-500 h-16 rounded text-white font-bold text-2xl"
+              onClick={() => handleBooking(classDetails?.id as string, uid)}
+            >
+              booking
+            </button>
+          </div>
+        </div>
+      </div>
     </div>
   );
 }
