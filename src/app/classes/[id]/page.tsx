@@ -49,7 +49,7 @@ function classDetails() {
     if (reservedUsers.includes(userId)) {
       console.warn("این کاربر قبلاً رزرو کرده!");
       return;
-    } else if (reservedUsers.length < classDetails?.capacity - usersCount) {
+    } else if (reservedUsers.length > classDetails?.capacity - usersCount) {
       console.warn("ظرفیت تکمیل");
       return;
     } else {

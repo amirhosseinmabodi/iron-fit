@@ -3,7 +3,7 @@ import React from "react";
 
 function Footer() {
   return (
-    <footer className="bg-gray-900 grid grid-cols-4 mt-8 gap-8 p-8 text-white">
+    <footer className="bg-gray-900 grid grid-cols-4 gap-8 p-8 text-white">
       <div className="col-span-2">
         <h1 className="text-2xl text-orange-500 font-bold">IronFit</h1>
         <p className="text-sm">
