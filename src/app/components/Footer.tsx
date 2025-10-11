@@ -15,7 +15,9 @@ function Footer() {
       <div>
         <h1 className="text-2xl text-orange-500 font-bold">Quick Links</h1>
         <ul>
-          <li><Link href="/Classes"></Link>Classes</li>
+          <li>
+            <Link href="/classes"></Link>classes
+          </li>
           <li>Trainers</li>
           <li>Membership</li>
           <li>Terms & Rules</li>

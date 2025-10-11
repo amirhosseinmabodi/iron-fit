@@ -97,7 +97,7 @@ function register() {
         value={data.password}
       />
       <select
-      className='border border-gray-300 rounded px-4 py-2 outline-orange-500'
+        className="border border-gray-300 rounded px-4 py-2 outline-orange-500"
         name="gender"
         onChange={inputHandler}
         value={data.gender === null ? "" : String(data.gender)}
@@ -105,7 +105,12 @@ function register() {
         <option value="true">male</option>
         <option value="false">female</option>
       </select>
-      <button className='border bg-orange-500 py-4 px-15 rounded-full font-bold text-xl cursor-pointer hover:scale-105 transition duration-300 text-white border-gray-300 rounde' onClick={submitHandler}>submit</button>
+      <button
+        className="border bg-orange-500 py-4 px-15 rounded-full font-bold text-xl cursor-pointer hover:scale-105 transition duration-300 text-white border-gray-300 rounde"
+        onClick={submitHandler}
+      >
+        submit
+      </button>
     </div>
   );
 }

@@ -144,21 +144,66 @@ function classes() {
           Save Class
         </button>
       </form>
-      <div>
-        {classes.map((cls: IGymClass) => (
-          <div key={cls.id} className="p-4 flex gap-4">
-            <h3>{cls.name}</h3>
-            <p>{cls.description}</p>
-            <h3>{cls.coach}</h3>
-            <h3>{cls.price}</h3>
-            <div className="flex gap-4">
-              <button onClick={() => editHandler(cls.id as string)}>edit</button>
-              <button onClick={() => deleteHandler(cls.id as string)}>
-                delete
-              </button>
-            </div>
-          </div>
-        ))}
+      <div className="my-8">
+        <div className="overflow-x-auto mt-10">
+          <table className="min-w-full border border-gray-300 text-left rounded-lg overflow-hidden shadow-md">
+            <thead className="bg-orange-500 text-white">
+              <tr>
+                <th className="py-3 px-4">Image</th>
+                <th className="py-3 px-4">Name</th>
+                <th className="py-3 px-4">Description</th>
+                <th className="py-3 px-4">Coach</th>
+                <th className="py-3 px-4">Date & Time</th>
+                <th className="py-3 px-4">Duration (min)</th>
+                <th className="py-3 px-4">Capacity</th>
+                <th className="py-3 px-4">Price</th>
+                <th className="py-3 px-4 text-center">Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {classes.map((cls: IGymClass) => (
+                <tr
+                  key={cls.id}
+                  className="border-t hover:bg-orange-50 transition-colors"
+                >
+                  <td className="py-3 px-4">
+                    <img
+                      src={cls.image}
+                      alt={cls.name}
+                      className="w-16 h-16 object-cover rounded-md border"
+                    />
+                  </td>
+                  <td className="py-3 px-4 font-semibold">{cls.name}</td>
+                  <td className="py-3 px-4 text-gray-600">{cls.description}</td>
+                  <td className="py-3 px-4">{cls.coach}</td>
+                  <td className="py-3 px-4">
+                    {new Date(cls.date).toLocaleString("en-US", {
+                      dateStyle: "medium",
+                      timeStyle: "short",
+                    })}
+                  </td>
+                  <td className="py-3 px-4">{cls.duration} min</td>
+                  <td className="py-3 px-4">{cls.capacity}</td>
+                  <td className="py-3 px-4">${cls.price}</td>
+                  <td className="py-3 px-4 flex justify-center gap-3">
+                    <button
+                      onClick={() => editHandler(cls.id as string)}
+                      className="px-3 py-1 bg-blue-500 text-white rounded hover:bg-blue-600 transition"
+                    >
+                      Edit
+                    </button>
+                    <button
+                      onClick={() => deleteHandler(cls.id as string)}
+                      className="px-3 py-1 bg-red-500 text-white rounded hover:bg-red-600 transition"
+                    >
+                      Delete
+                    </button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
   );

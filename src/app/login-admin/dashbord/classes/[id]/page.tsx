@@ -7,7 +7,7 @@ import { useRouter } from "next/navigation";
 
 function edit() {
   const { id } = useParams();
-  const router = useRouter()
+  const router = useRouter();
   const [formData, setFormData] = useState({
     name: "",
     description: "",
@@ -27,7 +27,7 @@ function edit() {
   };
 
   useEffect(() => {
-    const fetchclass = async () => {
+    const fetchclassName = async () => {
       if (!id) {
         return;
       }
@@ -35,29 +35,29 @@ function edit() {
         const docref = doc(db, "classes", id as string);
         const snapshot = await getDoc(docref);
         if (snapshot.exists()) {
-          const data = snapshot.data()
+          const data = snapshot.data();
           setFormData({
-          name: data.name || "",
-          description: data.description || "" ,
-          coach: data.coach || "",
-          date: new Date(data.date.seconds * 1000).toISOString().slice(0, 16),
-          duration: String(data.duration || ""),
-          capacity: String(data.capacity || ""),
-          price: String(data.price || ""),
-          image:  data.image || "",
-        });
-        }else{
-          alert("Class not found!");
+            name: data.name || "",
+            description: data.description || "",
+            coach: data.coach || "",
+            date: new Date(data.date.seconds * 1000).toISOString().slice(0, 16),
+            duration: String(data.duration || ""),
+            capacity: String(data.capacity || ""),
+            price: String(data.price || ""),
+            image: data.image || "",
+          });
+        } else {
+          alert("className not found!");
           router.push("/admin/classes");
         }
       } catch (error) {
         console.error(error);
       }
     };
-    fetchclass()
+    fetchclassName();
   }, []);
 
-  async function handleUpdate (e: React.FormEvent) {
+  async function handleUpdate(e: React.FormEvent) {
     e.preventDefault();
     try {
       const docRef = doc(db, "classes", id as string);
@@ -68,8 +68,8 @@ function edit() {
         capacity: Number(formData.capacity),
         price: Number(formData.price),
       });
-      alert("Class updated!");
-      window.location.href = "/login-admin/dashbord/classes"
+      alert("className updated!");
+      window.location.href = "/login-admin/dashbord/classes";
     } catch (err) {
       console.error("Update failed:", err);
     }
@@ -84,7 +84,7 @@ function edit() {
         name="name"
         value={formData.name}
         onChange={handleChange}
-        placeholder="Class Name"
+        placeholder="className Name"
         className="border p-2 w-full"
       />
       <textarea
@@ -143,7 +143,7 @@ function edit() {
         type="submit"
         className="bg-green-500 text-white px-4 py-2 rounded"
       >
-        Update Class
+        Update className
       </button>
     </form>
   );

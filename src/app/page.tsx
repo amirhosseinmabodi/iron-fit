@@ -28,7 +28,7 @@ export default function Home() {
           </p>
           <div className="flex gap-4 justify-center items-center">
             <button className="bg-orange-500 text-white font-bold lg:text-xl text-sm  rounded lg:px-8 lg:py-4 cursor-pointer md:px-4 md:py-2 px-2 py-1">
-              <Link href="/classes">View Classes</Link>
+              <Link href="/classes">View classes</Link>
             </button>
             <button className="bg-transparent text-white border-white border-2 hover:bg-white hover:text-black transition duration-300 rounded font-bold lg:text-xl text-sm lg:px-8 lg:py-4 cursor-pointer md:px-4 md:py-2 px-2 py-1">
               <Link href="/register">Join Free Trial</Link>
@@ -127,11 +127,11 @@ export default function Home() {
       <section>
         <div className="text-center max-w-7xl m-auto py-16">
           <h1 className="text-4xl font-bold text-orange-500 font-bold">
-            Popular Classes
+            Popular classes
           </h1>
           <p className="text-gray-600 max-w-2xl m-auto pt-2 text-xl font-bold">
-            From relaxing yoga to strength training, find the perfect class for
-            you
+            From relaxing yoga to strength training, find the perfect className
+            for you
           </p>
         </div>
         <div className="grid lg:grid-cols-3 grid-cols-1 justify-between m-auto gap-4 p-8">
@@ -161,7 +161,7 @@ export default function Home() {
                     {cls.capacity} spots available
                   </span>
                   <span className="text-sm text-blue-500">
-                    ${cls.price}/class
+                    ${cls.price}/className
                   </span>
                 </div>
               </div>
@@ -177,7 +177,7 @@ export default function Home() {
           </div>
           <div className="text-center">
             <h3 className="text-white font-bold text-4xl">20+</h3>
-            <p className="text-white text-sm">Class Types</p>
+            <p className="text-white text-sm">className Types</p>
           </div>
           <div className="text-center">
             <h3 className="text-white font-bold text-4xl">15+</h3>

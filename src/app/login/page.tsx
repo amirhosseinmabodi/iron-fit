@@ -31,7 +31,9 @@ function login() {
       >
         <div className="text-center text-orange-500">
           <h2 className="font-bold text-2xl">Welcome Back</h2>
-          <p className="text-sm mt-2 text-gray-500">Sign in to your IronFit account</p>
+          <p className="text-sm mt-2 text-gray-500">
+            Sign in to your IronFit account
+          </p>
         </div>
         {error && <p style={{ color: "red" }}>{error}</p>}
         <input
@@ -48,7 +50,12 @@ function login() {
           onChange={(e) => setPassword(e.target.value)}
           className="outline-orange-500 w-full h-10 p-2 rounded border border-gray-300"
         />
-        <button className="bg-orange-500 w-full h-8 rounded-lg cursor-pointer text-white font-bold" type="submit">Sign In</button>
+        <button
+          className="bg-orange-500 w-full h-8 rounded-lg cursor-pointer text-white font-bold"
+          type="submit"
+        >
+          Sign In
+        </button>
       </form>
     </div>
   );

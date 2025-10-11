@@ -10,7 +10,7 @@ export default function LoginAdmin() {
 
   const loginHandler = () => {
     if (username === "admin" && password === "1234") {
-      setCookie("isAdmin", "true"); 
+      setCookie("isAdmin", "true");
       router.push("/login-admin/dashbord");
     } else {
       alert("username or password is wrong!");

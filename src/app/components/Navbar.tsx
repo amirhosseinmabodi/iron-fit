@@ -70,57 +70,59 @@ function Navbar() {
         <span className="w-6 h-0.5 bg-black"></span>
         <span className="w-6 h-0.5 bg-black"></span>
       </button>
-     {open && (<div className="md:hidden bg-orange-500 w-64 right-0 overflow-y-visible py-4 absolute top-16 z-1">
-      <div className="flex flex-col gap-4 text-center text-white capitalize">
-        <Link
-          className="hover:text-orange-500 transition hover:font-bold hover:bg-white"
-          href="/"
-        >
-          Home
-        </Link>
-        <Link
-          className=" hover:text-orange-500 transition  hover:font-bold  hover:bg-white"
-          href="/classes"
-        >
-          classes
-        </Link>
-        <Link
-          className=" hover:text-orange-500 transition  hover:font-bold  hover:bg-white"
-          href="/about"
-        >
-          about
-        </Link>
-        <Link
-          className=" hover:text-orange-500 transition  hover:font-bold  hover:bg-white"
-          href="/contact"
-        >
-          contact
-        </Link>
-        {uid ? (
-          <Link
-            href="/dashbord"
-            className=" hover:text-orange-500 transition  hover:font-bold hover:bg-white"
-          >
-            Dashboard
-          </Link>
-        ) : (
-          <>
+      {open && (
+        <div className="md:hidden bg-orange-500 w-64 right-0 overflow-y-visible py-4 absolute top-16 z-1">
+          <div className="flex flex-col gap-4 text-center text-white capitalize">
             <Link
-              href="/login"
-              className=" hover:text-orange-500 transition  hover:font-bold cursor-pointer hover:bg-white"
+              className="hover:text-orange-500 transition hover:font-bold hover:bg-white"
+              href="/"
             >
-              <button className="cursor-pointer">Login</button>
+              Home
             </Link>
             <Link
-              href="/register"
-              className="bg-orange-500 text-white hover:font-bold hover:bg-white hover:text-orange-500"
+              className=" hover:text-orange-500 transition  hover:font-bold  hover:bg-white"
+              href="/classes"
             >
-              Sign up
+              classes
             </Link>
-          </>
-        )}
-      </div>
-      </div>)} 
+            <Link
+              className=" hover:text-orange-500 transition  hover:font-bold  hover:bg-white"
+              href="/about"
+            >
+              about
+            </Link>
+            <Link
+              className=" hover:text-orange-500 transition  hover:font-bold  hover:bg-white"
+              href="/contact"
+            >
+              contact
+            </Link>
+            {uid ? (
+              <Link
+                href="/dashbord"
+                className=" hover:text-orange-500 transition  hover:font-bold hover:bg-white"
+              >
+                Dashboard
+              </Link>
+            ) : (
+              <>
+                <Link
+                  href="/login"
+                  className=" hover:text-orange-500 transition  hover:font-bold cursor-pointer hover:bg-white"
+                >
+                  <button className="cursor-pointer">Login</button>
+                </Link>
+                <Link
+                  href="/register"
+                  className="bg-orange-500 text-white hover:font-bold hover:bg-white hover:text-orange-500"
+                >
+                  Sign up
+                </Link>
+              </>
+            )}
+          </div>
+        </div>
+      )}
     </div>
   );
 }

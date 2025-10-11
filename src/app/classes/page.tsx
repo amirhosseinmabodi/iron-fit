@@ -18,7 +18,7 @@ function classes() {
   return (
     <div>
       <div className="bg-orange-500 p-16 text-center text-white">
-        <h1 className="font-bold text-4xl">Fitness Classes</h1>
+        <h1 className="font-bold text-4xl">Fitness classes</h1>
         <p className="text-sm pt-4">
           Choose from over 20 diverse classes to find the perfect fit for you
         </p>
@@ -48,7 +48,7 @@ function classes() {
           </svg>
         </div>
       </div>
-      <div className="grid grid-cols-3 gap-8 p-16">
+      <div className="grid lg:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-8 p-16">
         {classes.length === 0 ? (
           <div className="col-span-full">
             <Loading />
