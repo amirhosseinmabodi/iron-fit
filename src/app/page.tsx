@@ -1,10 +1,14 @@
-"use client"
+"use client";
 import { url } from "inspector";
 import Image from "next/image";
-import {usecontext} from "../context/context"
+import { usecontext } from "../context/context";
 import Link from "next/link";
+import Loading from "./components/Loading";
+import { useState } from "react";
 export default function Home() {
-  const {classes} = usecontext()
+  const { classes } = usecontext();
+  console.log(console.log(classes.length));
+
   return (
     <div>
       <section
@@ -15,18 +19,18 @@ export default function Home() {
         }}
       >
         <div className="max-w-4xl m-auto p-4 text-center flex flex-col gap-4">
-          <h1 className="text-5xl font-bold text-orange-500 font-bold">
+          <h1 className="lg:text-5xl sm:text-3xl font-bold text-orange-500 font-bold">
             Welcome to the City's Premier Fitness Club
           </h1>
-          <p className="text-white text-2xl font-bold ">
+          <p className="text-white lg:text-2xl md:text-lg font-bold ">
             Experience an unforgettable fitness journey with professional
             trainers and modern facilities
           </p>
           <div className="flex gap-4 justify-center items-center">
-            <button className="bg-orange-500 text-white font-bold text-xl rounded px-8 py-4 cursor-pointer">
-              <Link href="/classes">View Classes</Link> 
+            <button className="bg-orange-500 text-white font-bold lg:text-xl text-sm  rounded lg:px-8 lg:py-4 cursor-pointer md:px-4 md:py-2 px-2 py-1">
+              <Link href="/classes">View Classes</Link>
             </button>
-            <button className="bg-transparent text-white border-white border-2 hover:bg-white hover:text-black transition duration-300 rounded font-bold text-xl px-8 py-4 cursor-pointer">
+            <button className="bg-transparent text-white border-white border-2 hover:bg-white hover:text-black transition duration-300 rounded font-bold lg:text-xl text-sm lg:px-8 lg:py-4 cursor-pointer md:px-4 md:py-2 px-2 py-1">
               <Link href="/register">Join Free Trial</Link>
             </button>
           </div>
@@ -42,7 +46,7 @@ export default function Home() {
             services in the city
           </p>
         </div>
-        <div className="grid grid-cols-3 justify-between m-auto gap-4 p-8">
+        <div className="grid lg:grid-cols-3 grid-cols-1 justify-between m-auto gap-4 p-8">
           <div className="shadow-xl hover:shadow-2xl transition-shadow duration-300 rounded-xl bg-white p-4 flex flex-col justify-center items-center gap-4">
             <div className="h-16 w-16 bg-blue-200 rounded-full">
               <svg
@@ -123,28 +127,46 @@ export default function Home() {
       <section>
         <div className="text-center max-w-7xl m-auto py-16">
           <h1 className="text-4xl font-bold text-orange-500 font-bold">
-          Popular Classes
+            Popular Classes
           </h1>
           <p className="text-gray-600 max-w-2xl m-auto pt-2 text-xl font-bold">
-          From relaxing yoga to strength training, find the perfect class for you
+            From relaxing yoga to strength training, find the perfect class for
+            you
           </p>
         </div>
-        <div className="grid grid-cols-3 justify-between m-auto gap-4 p-8">
-          {classes.map((cls) =>(
-            <div className="shadow-xl hover:shadow-2xl transition-shadow duration-300 rounded-xl bg-white overflow-hidden flex flex-col justify-center items-center gap-4">
-            <img className="w-full object-cover object-top h-64" src={cls.image} alt="" />
-            <h3 className="text-2xl text-orange-500 font-bold">
-              {cls.name}
-            </h3>
-            <p className="text-gray-500 text-center max-w-2xl">
-              {cls.description}
-            </p>
-            <div className="flex justify-between items-center gap-4 mb-4">
-              <span className="text-sm">{cls.capacity}spots available</span>
-              <span className="text-sm text-blue-500">${cls.price}/class</span>
+        <div className="grid lg:grid-cols-3 grid-cols-1 justify-between m-auto gap-4 p-8">
+          {classes.length === 0 ? (
+            <div className="col-span-full">
+              <Loading />
             </div>
-          </div>
-          ))}
+          ) : (
+            classes.map((cls) => (
+              <div
+                key={cls.id}
+                className="shadow-xl hover:shadow-2xl transition-shadow duration-300 rounded-xl bg-white overflow-hidden flex flex-col justify-center items-center gap-4"
+              >
+                <img
+                  className="w-full object-cover object-top h-64"
+                  src={cls.image}
+                  alt={cls.name}
+                />
+                <h3 className="text-2xl text-orange-500 font-bold">
+                  {cls.name}
+                </h3>
+                <p className="text-gray-500 text-center max-w-2xl">
+                  {cls.description}
+                </p>
+                <div className="flex justify-between items-center gap-4 mb-4">
+                  <span className="text-sm">
+                    {cls.capacity} spots available
+                  </span>
+                  <span className="text-sm text-blue-500">
+                    ${cls.price}/class
+                  </span>
+                </div>
+              </div>
+            ))
+          )}
         </div>
       </section>
       <section>
@@ -169,7 +191,9 @@ export default function Home() {
         <div className="bg-gray-900 text-white gap-2 py-20 flex justify-center flex-col items-center">
           <h2 className=" font-bold text-4xl">Ready to Start?</h2>
           <p>Join us today and experience an amazing fitness journey</p>
-          <button className="bg-orange-500 py-4 px-8 rounded font-bold mt-4 hover:cursor-pointer hover:scale-105 transition-all duration-150"><Link href="/register">Start Free Trial</Link></button>
+          <button className="bg-orange-500 py-4 px-8 rounded font-bold mt-4 hover:cursor-pointer hover:scale-105 transition-all duration-150">
+            <Link href="/register">Start Free Trial</Link>
+          </button>
         </div>
       </section>
     </div>
