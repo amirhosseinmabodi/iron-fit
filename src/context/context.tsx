@@ -23,8 +23,19 @@ export interface IGymclassName {
   reservedUsers: string[];
 }
 
+export interface IGymusers {
+  uid: string;
+  email: string;
+  password: string;
+  name: string;
+  lastname: string;
+  gender: Boolean;
+  age: number;
+}
+
 interface context {
   classes: IGymclassName[];
+  users: IGymusers[];
   refetch: () => Promise<void>;
 }
 
@@ -32,6 +43,7 @@ const Context = createContext<context | undefined>(undefined);
 
 export const ContextProvider = ({ children }: { children: ReactNode }) => {
   const [classes, setClasses] = useState<IGymclassName[]>([]);
+  const [users, setUsers] = useState<IGymusers[]>([]);
 
   const fetchclasses = async () => {
     try {
@@ -42,16 +54,29 @@ export const ContextProvider = ({ children }: { children: ReactNode }) => {
       })) as IGymclassName[];
       setClasses(list);
     } catch (error) {
-      console.error("خطا در دریافت کلاس‌ها:", error);
+      console.error("some things wrong!", error);
+    }
+  };
+  const fetchusers = async () => {
+    try {
+      const snapshot = await getDocs(collection(db, "users"));
+      const list = snapshot.docs.map((doc) => ({
+        uid: doc.id,
+        ...doc.data(),
+      })) as IGymusers[];
+      setUsers(list);
+    } catch (error) {
+      console.error("some things wrong!", error);
     }
   };
 
   useEffect(() => {
     fetchclasses();
+    fetchusers();
   }, []);
 
   return (
-    <Context.Provider value={{ classes, refetch: fetchclasses }}>
+    <Context.Provider value={{ classes, users, refetch: { fetchclasses , fetchusers } }}>
       {children}
     </Context.Provider>
   );
