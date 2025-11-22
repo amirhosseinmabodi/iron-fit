@@ -65,45 +65,72 @@ function dashbord() {
 
   return (
     <div className="p-4">
-      <button
-        className="bg-red-500 py-2 px-4 text-white font-bold text-xl capitalize float-end rounded-full"
-        onClick={logoutHandler}
-      >
-        logout
-      </button>
       <h2 className="text-4xl text-center font-bold">{userName}</h2>
-      <h3 className="p-8 text-2xl">reserved className</h3>
-      {classes.length === 0 ? (
-        <p>there is no reserved className</p>
-      ) : (
-        <div className="grid grid-cols-3 gap-4">
-          {classes.map((cls) => (
-            <div
-              key={cls.id}
-              className="p-8 text-white bg-orange-500 rounded-lg"
+
+      <div className="flex min-h-screen gap-4">
+        <div className="w-1/4 min-w-[200px] bg-gray-800 text-white p-4">
+          <h2 className="text-xl font-semibold mb-4">Dashboard Menu</h2>
+          <ul className="space-y-2">
+            <li className="hover:bg-gray-700 p-2 rounded">Home</li>
+            <li className="hover:bg-gray-700 p-2 rounded">Profile</li>
+            <li className="hover:bg-gray-700 p-2 rounded">Settings</li>
+            <li
+              className="hover:bg-gray-700 p-2 rounded"
+              onClick={logoutHandler}
             >
-              <div className="text-center p-4">
-                <h3 className="text-4xl font-extrabold mb-3">{cls.name}</h3>
-                <p className="font-bold">
-                  {cls.date?.toDate().toLocaleString()}
-                </p>
-              </div>
-              <p className="text-center">
-                coach: {cls.coach} | price: {cls.price}
-                <hr className="my-4" />
-              </p>
-              <button
-                onClick={() =>
-                  cancelHandler(cls.id, getCookie("UID") as string)
-                }
-                className="w-full h-16 bg-red-600 rounded-full text-3xl font-bold cursor-pointer"
-              >
-                cancel
-              </button>
-            </div>
-          ))}
+              Logout
+            </li>
+          </ul>
         </div>
-      )}
+        <div className="flex-1">
+          <h3 className="text-3xl font-extrabold p-8 text-gray-800">
+            Reserved Classes 🏋🏻‍♂️
+          </h3>
+
+          {classes.length === 0 ? (
+            <div className="text-center text-gray-500 mt-20">
+              <p className="text-xl">No reserved classes found.</p>
+              <p className="text-sm italic mt-2">Maybe time to book one? 😅</p>
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 p-4">
+              {classes.map((cls) => (
+                <div
+                  key={cls.id}
+                  className="bg-white shadow-md rounded-xl p-6 hover:shadow-xl transition-all flex flex-col justify-between"
+                >
+                  <div className="mb-4">
+                    <h3 className="text-center text-3xl font-bold text-orange-600 mb-3">
+                      {cls.name}
+                    </h3>
+                    <p className="text-center text-gray-600 font-semibold">
+                      {cls.date?.toDate().toLocaleString()}
+                    </p>
+                  </div>
+
+                  <div className="text-center text-gray-700 mb-6">
+                    <p>
+                      <span className="font-bold">Coach:</span> {cls.coach}
+                    </p>
+                    <p>
+                      <span className="font-bold">Price:</span> {cls.price}$
+                    </p>
+                  </div>
+
+                  <button
+                    onClick={() =>
+                      cancelHandler(cls.id, getCookie("UID") as string)
+                    }
+                    className="w-full py-3 bg-red-500 hover:bg-red-600 text-white font-bold rounded-lg text-lg transition-colors"
+                  >
+                    Cancel Reservation
+                  </button>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+      </div>
     </div>
   );
 }

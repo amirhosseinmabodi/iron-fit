@@ -6,7 +6,7 @@ import { db } from "../../../../../lib/firebase";
 import edit from "./[id]/page";
 import { useRouter } from "next/navigation";
 
-function classes() {
+function ClassesList() {
   const { classes } = usecontext();
   const router = useRouter();
   const [formData, setFormData] = useState({
@@ -209,4 +209,4 @@ function classes() {
   );
 }
 
-export default classes;
+export default ClassesList;

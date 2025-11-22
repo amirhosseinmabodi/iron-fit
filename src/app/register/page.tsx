@@ -50,6 +50,7 @@ function register() {
       });
       console.log("succsesful");
       setCookie("UID", user.uid, { maxAge: 60 * 60 * 24 * 7 });
+      window.location.href = "http://localhost:3000/dashbord";
     } catch (err: any) {
       console.error(err.message || "somethings wrong");
     }
@@ -75,7 +76,7 @@ function register() {
       <input
         className="border border-gray-300 rounded px-4 py-2 outline-orange-500"
         name="age"
-        type="text"
+        type="number"
         placeholder="age"
         onChange={inputHandler}
         value={data.age}
