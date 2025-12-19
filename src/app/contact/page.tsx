@@ -3,7 +3,7 @@ import React from "react";
 function contact() {
   return (
     <div>
-      <div className="h-full">
+      <div className="h-screen px-[20vw] py-[20vh]">
         <form
           method="post"
           className="flex flex-col max-w-4xl p-8 border-gray-200 shadow-2xl rounded-2xl gap-4 border m-8"
