@@ -1,11 +1,13 @@
 "use client";
+
 import { doc, getDoc, updateDoc } from "firebase/firestore";
 import { useParams } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import { db } from "../../../../../../lib/firebase";
 
-function edit() {
+function EditUser() {
   const { id } = useParams();
+
   const [fdata, setFdata] = useState({
     age: "",
     email: "",
@@ -15,21 +17,22 @@ function edit() {
     password: "",
     uid: "",
   });
+
   const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
   ) => {
     const { name, value } = e.target;
-    setFdata((perv) => ({ ...perv, [name]: value }));
+    setFdata((prev) => ({ ...prev, [name]: value }));
   };
 
   useEffect(() => {
-    const fetchuser = async () => {
-      if (!id) {
-        return;
-      }
+    const fetchUser = async () => {
+      if (!id) return;
+
       try {
-        const docref = doc(db, "users", id as string);
-        const snapshot = await getDoc(docref);
+        const docRef = doc(db, "users", id as string);
+        const snapshot = await getDoc(docRef);
+
         if (snapshot.exists()) {
           const data = snapshot.data();
           setFdata({
@@ -41,40 +44,110 @@ function edit() {
             password: data.password,
             uid: data.uid,
           });
-        } else {
-          console.warn("dont find any data");
         }
       } catch (error) {
         console.error(error);
       }
     };
-    fetchuser()
-  }, []);
+
+    fetchUser();
+  }, [id]);
+
   const handleUpdate = async (e: React.FormEvent) => {
-    e.preventDefault()
-    const docref = doc(db,"users", id as string)
-    await updateDoc(docref , {
-      ...fdata
-    })
-    alert("className updated!");
-    window.location.href = "/login-admin/dashbord/users";
-  }
+    e.preventDefault();
+
+    try {
+      const docRef = doc(db, "users", id as string);
+      await updateDoc(docRef, {
+        ...fdata,
+        age: Number(fdata.age),
+      });
+
+      alert("User updated successfully ✅");
+      window.location.href = "/login-admin/dashbord/users";
+    } catch (error) {
+      console.error(error);
+      alert("Update failed ❌");
+    }
+  };
+
   return (
-    <div>
-      <form onSubmit={handleUpdate}>
-        <input name="name" type="text" value={fdata.name} placeholder="name" onChange={handleChange} />
-        <input name="lastname" type="text" value={fdata.lastname} placeholder="last name" onChange={handleChange} />
-        <input name="email" type="email" value={fdata.email} placeholder="email" onChange={handleChange} />
-        <input name="password" type="text" value={fdata.password} placeholder="password" onChange={handleChange} />
-        <input name="age" type="text" value={fdata.age} placeholder="age" onChange={handleChange} />
-        <select name="gender" value={fdata.gender} onSelect={handleChange}>
-          <option value="true">male</option>
-          <option value="false">female</option>
-        </select>
-        <input type="submit" />
+    <div className="min-h-screen bg-gray-100 flex justify-center items-center px-4">
+      <form
+        onSubmit={handleUpdate}
+        className="bg-white w-full max-w-lg p-8 rounded-2xl shadow-xl space-y-5"
+      >
+        <h1 className="text-3xl font-bold text-center text-orange-500">
+          Edit User Profile
+        </h1>
+
+        <div className="grid grid-cols-2 gap-4">
+          <input
+            name="name"
+            value={fdata.name}
+            onChange={handleChange}
+            placeholder="First Name"
+            className="border p-3 rounded-lg focus:outline-orange-500"
+          />
+
+          <input
+            name="lastname"
+            value={fdata.lastname}
+            onChange={handleChange}
+            placeholder="Last Name"
+            className="border p-3 rounded-lg focus:outline-orange-500"
+          />
+        </div>
+
+        <input
+          name="email"
+          type="email"
+          value={fdata.email}
+          onChange={handleChange}
+          placeholder="Email"
+          className="w-full border p-3 rounded-lg focus:outline-orange-500"
+        />
+
+        <input
+          name="password"
+          type="text"
+          value={fdata.password}
+          onChange={handleChange}
+          placeholder="Password"
+          className="w-full border p-3 rounded-lg focus:outline-orange-500"
+        />
+
+        <div className="grid grid-cols-2 gap-4">
+          <input
+            name="age"
+            type="number"
+            value={fdata.age}
+            onChange={handleChange}
+            placeholder="Age"
+            className="border p-3 rounded-lg focus:outline-orange-500"
+          />
+
+          <select
+            name="gender"
+            value={fdata.gender}
+            onChange={handleChange}
+            className="border p-3 rounded-lg focus:outline-orange-500"
+          >
+            <option value="">Gender</option>
+            <option value="true">Male</option>
+            <option value="false">Female</option>
+          </select>
+        </div>
+
+        <button
+          type="submit"
+          className="w-full bg-orange-500 hover:bg-orange-600 text-white py-3 rounded-lg font-bold text-lg transition"
+        >
+          Save Changes
+        </button>
       </form>
     </div>
   );
 }
 
-export default edit;
+export default EditUser;

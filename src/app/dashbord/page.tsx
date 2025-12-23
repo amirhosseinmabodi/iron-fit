@@ -71,11 +71,12 @@ function dashbord() {
         <div className="w-1/4 min-w-[200px] bg-gray-800 text-white p-4">
           <h2 className="text-xl font-semibold mb-4">Dashboard Menu</h2>
           <ul className="space-y-2">
-            <li className="hover:bg-gray-700 p-2 rounded">Home</li>
-            <li className="hover:bg-gray-700 p-2 rounded">Profile</li>
-            <li className="hover:bg-gray-700 p-2 rounded">Settings</li>
+            <li className="hover:bg-orange-500 cursor-pointer p-2 rounded">classes</li>
+            <li className="hover:bg-orange-500 cursor-pointer p-2 rounded" onClick={() => {
+               window.location.href = "/dashbord/profile";
+            }}>Profile</li>
             <li
-              className="hover:bg-gray-700 p-2 rounded"
+              className="hover:bg-orange-500 cursor-pointer p-2 rounded"
               onClick={logoutHandler}
             >
               Logout
