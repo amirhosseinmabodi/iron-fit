@@ -13,33 +13,54 @@ export default function LoginAdmin() {
       setCookie("isAdmin", "true");
       router.push("/login-admin/dashbord");
     } else {
-      alert("username or password is wrong!");
+      alert("Username or password is wrong!");
     }
   };
 
   return (
-    <div className="p-10">
-      <h2 className="text-2xl mb-4">Admin Login</h2>
-      <input
-        type="text"
-        placeholder="username"
-        value={username}
-        onChange={(e) => setUsername(e.target.value)}
-        className="border p-2 block mb-3"
-      />
-      <input
-        type="password"
-        placeholder="password"
-        value={password}
-        onChange={(e) => setPassword(e.target.value)}
-        className="border p-2 block mb-3"
-      />
-      <button
-        onClick={loginHandler}
-        className="bg-blue-500 text-white px-4 py-2"
-      >
-        Login
-      </button>
+    <div className="min-h-screen flex items-center justify-center bg-gray-100">
+      <div className="w-full max-w-md bg-white rounded-2xl shadow-xl p-8">
+        <h2 className="text-3xl font-extrabold text-center text-orange-500 mb-8">
+          Admin Login
+        </h2>
+
+        <div className="mb-5">
+          <label className="block text-sm font-medium text-gray-600 mb-1">
+            Username
+          </label>
+          <input
+            type="text"
+            placeholder="Enter username"
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
+            className="w-full rounded-lg border border-gray-300 p-3 outline-none focus:border-orange-500 focus:ring-1 focus:ring-orange-500 transition"
+          />
+        </div>
+
+        <div className="mb-6">
+          <label className="block text-sm font-medium text-gray-600 mb-1">
+            Password
+          </label>
+          <input
+            type="password"
+            placeholder="Enter password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            className="w-full rounded-lg border border-gray-300 p-3 outline-none focus:border-orange-500 focus:ring-1 focus:ring-orange-500 transition"
+          />
+        </div>
+
+        <button
+          onClick={loginHandler}
+          className="w-full bg-orange-500 hover:bg-orange-600 text-white py-3 rounded-lg font-semibold text-lg transition duration-300"
+        >
+          Login
+        </button>
+
+        <p className="text-xs text-gray-400 text-center mt-6">
+          Restricted access for administrators only
+        </p>
+      </div>
     </div>
   );
 }

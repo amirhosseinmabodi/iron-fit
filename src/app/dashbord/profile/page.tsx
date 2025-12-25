@@ -5,6 +5,7 @@ import { doc, getDoc, updateDoc } from "firebase/firestore";
 import { db } from "../../../../lib/firebase";
 import { getCookie } from "cookies-next";
 import { useRouter } from "next/navigation";
+import Loading from "@/app/components/Loading";
 
 export default function Profile() {
   const router = useRouter();
@@ -81,7 +82,7 @@ export default function Profile() {
   if (loading) {
     return (
       <div className="flex justify-center items-center h-screen">
-        Loading...
+        <Loading/>
       </div>
     );
   }

@@ -140,32 +140,38 @@ export default function Home() {
               <Loading />
             </div>
           ) : (
-            classes.map((cls) => (
-              <div
-                key={cls.id}
-                className="shadow-xl hover:shadow-2xl transition-shadow duration-300 rounded-xl bg-white overflow-hidden flex flex-col justify-center items-center gap-4"
-              >
-                <img
-                  className="w-full object-cover object-top h-64"
-                  src={cls.image}
-                  alt={cls.name}
-                />
-                <h3 className="text-2xl text-orange-500 font-bold">
-                  {cls.name}
-                </h3>
-                <p className="text-gray-500 text-center max-w-2xl">
-                  {cls.description}
-                </p>
-                <div className="flex justify-between items-center gap-4 mb-4">
-                  <span className="text-sm">
-                    {cls.capacity} spots available
-                  </span>
-                  <span className="text-sm text-blue-500">
-                    ${cls.price}/className
-                  </span>
+            classes
+              .slice()
+              .sort((a, b) => a.capacity - b.capacity)
+              .slice(0, 3)
+              .map((cls) => (
+                <div
+                  key={cls.id}
+                  className="shadow-xl hover:shadow-2xl transition-shadow duration-300 rounded-xl bg-white overflow-hidden flex flex-col justify-center items-center gap-4"
+                >
+                  <Link href={`/classes/${cls.id}`}>
+                    <img
+                      className="w-full object-cover object-top h-64 cursor-pointer"
+                      src={cls.image}
+                      alt={cls.name}
+                    />
+                  </Link>
+                  <h3 className="text-2xl text-orange-500 font-bold">
+                    {cls.name}
+                  </h3>
+                  <p className="text-gray-500 text-center max-w-2xl">
+                    {cls.description}
+                  </p>
+                  <div className="flex justify-between items-center gap-4 mb-4">
+                    <span className="text-sm">
+                      {cls.capacity} spots available
+                    </span>
+                    <span className="text-sm text-blue-500">
+                      ${cls.price}/className
+                    </span>
+                  </div>
                 </div>
-              </div>
-            ))
+              ))
           )}
         </div>
       </section>

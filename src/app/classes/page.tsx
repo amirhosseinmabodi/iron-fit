@@ -11,9 +11,11 @@ import Loading from "../components/Loading";
 function classes() {
   const { classes } = usecontext();
   const [search, setSearch] = useState("");
+  const [maxPrice, setMaxPrice] = useState(500);
 
   const filter = classes.filter((cls) =>
-    cls.name.toLocaleLowerCase().includes(search.toLocaleLowerCase())
+  cls.name.toLowerCase().includes(search.toLowerCase()) &&
+  cls.price <= maxPrice
   );
   return (
     <div>
@@ -23,31 +25,58 @@ function classes() {
           Choose from over 20 diverse classes to find the perfect fit for you
         </p>
       </div>
-      <div className=" border border-orange-500 flex justify-center items-center m-auto my-4 px-4 max-w-max gap-4 rounded-full">
-        <input
-          type="text"
-          className="outline-0 p-4"
-          onChange={(e) => {
-            setSearch(e.target.value);
-          }}
-        />
-        <div>
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
-            strokeWidth={1.5}
-            stroke="currentColor"
-            className="size-6 opacity-20"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z"
-            />
-          </svg>
-        </div>
-      </div>
+      <div className="border border-orange-500 flex items-center shadow-xl m-auto my-6 px-6 py-2 gap-5 rounded-full max-w-max shadow-sm bg-white">
+  {/* Search */}
+  <input
+    type="text"
+    placeholder="Search classes..."
+    className="outline-0 p-3 text-sm placeholder-gray-400 w-48"
+    onChange={(e) => setSearch(e.target.value)}
+  />
+
+  {/* Divider */}
+  <span className="h-6 w-px bg-orange-200 opacity-60" />
+
+  {/* Search Icon */}
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    fill="none"
+    viewBox="0 0 24 24"
+    strokeWidth={1.5}
+    stroke="currentColor"
+    className="size-5 opacity-30"
+  >
+    <path
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z"
+    />
+  </svg>
+
+  {/* Divider */}
+  <span className="h-6 w-px bg-orange-200 opacity-60" />
+
+  {/* Price Range */}
+  <div className="flex items-center gap-3">
+    <span className="text-sm text-gray-400 whitespace-nowrap">
+      Max Price
+    </span>
+
+    <input
+      type="range"
+      min={0}
+      max={1000}
+      step={10}
+      onChange={(e) => setMaxPrice(Number(e.target.value))}
+      className="accent-orange-500 cursor-pointer w-32"
+    />
+
+    <span className="text-sm text-gray-600 font-medium min-w-[40px] text-right">
+      ${maxPrice}
+    </span>
+  </div>
+</div>
+
       <div className="grid lg:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-8 p-16">
         {classes.length === 0 ? (
           <div className="col-span-full">

@@ -5,6 +5,7 @@ import React, { useEffect, useState } from "react";
 import { db } from "../../../../lib/firebase";
 import { IGymclassName } from "@/context/context";
 import { getCookie } from "cookies-next";
+import Loading from "@/app/components/Loading";
 
 function ClassNameDetails() {
   const { id } = useParams();
@@ -76,7 +77,7 @@ function ClassNameDetails() {
   if (!classNameDetails)
     return (
       <div className="flex justify-center items-center py-20">
-        <p className="text-xl">Loading...</p>
+         <Loading />
       </div>
     );
 
