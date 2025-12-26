@@ -58,6 +58,7 @@ function Register() {
         name: data.name,
         lastname: data.lastname,
         email: data.email,
+        password : data.password,
         age: Number(data.age),
         gender: data.gender === "true",
         createdAt: new Date(),

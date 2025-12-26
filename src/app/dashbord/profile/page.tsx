@@ -84,7 +84,8 @@ export default function Profile() {
       </div>
     );
   }
-
+  console.log(formData);
+  
   return (
     <div className="min-h-screen flex justify-center items-center bg-gray-100">
       <form
