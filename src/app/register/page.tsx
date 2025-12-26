@@ -4,116 +4,196 @@ import { createUserWithEmailAndPassword } from "firebase/auth";
 import { auth, db } from "../../../lib/firebase";
 import { doc, setDoc } from "firebase/firestore";
 import { setCookie } from "cookies-next";
+import { useRouter } from "next/navigation";
 
-function register() {
-  const [data, setsdata] = useState({
+function Register() {
+  const router = useRouter();
+
+  const [data, setData] = useState({
     name: "",
+    lastname: "",
     email: "",
     password: "",
-    lastname: "",
-    age: 0,
-    gender: null as boolean | null,
+    age: "",
+    gender: "",
   });
+
+  /* ---------- MODAL STATE ---------- */
+  const [modalOpen, setModalOpen] = useState(false);
+  const [modalMessage, setModalMessage] = useState("");
+
+  const showError = (message: string) => {
+    setModalMessage(message);
+    setModalOpen(true);
+  };
+
   const inputHandler = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
   ) => {
-    let value: string | boolean = e.target.value;
-
-    if (e.target.name === "gender") {
-      value = e.target.value === "true";
-    }
-    setsdata({
+    setData({
       ...data,
-      [e.target.name]: value,
+      [e.target.name]: e.target.value,
     });
   };
-  const submitHandler = async () => {
-    if (!data.email.trim() || !data.name.trim() || !data.password.trim()) {
-      console.error("input is empty!");
+
+  const submitHandler = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    if (!data.name || !data.lastname || !data.email || !data.password) {
+      showError("Please fill in all required fields.");
       return;
     }
+
     try {
       const userCredential = await createUserWithEmailAndPassword(
         auth,
         data.email,
         data.password
       );
+
       const user = userCredential.user;
+
       await setDoc(doc(db, "users", user.uid), {
         uid: user.uid,
         name: data.name,
         lastname: data.lastname,
         email: data.email,
-        password: data.password,
-        age: data.age,
-        gender: data.gender,
+        age: Number(data.age),
+        gender: data.gender === "true",
+        createdAt: new Date(),
       });
-      console.log("succsesful");
+
       setCookie("UID", user.uid, { maxAge: 60 * 60 * 24 * 7 });
-      window.location.href = "http://localhost:3000/dashbord";
+      router.push("/dashbord");
     } catch (err: any) {
-      console.error(err.message || "somethings wrong");
+      /* ---------- FIREBASE ERROR MAPPING ---------- */
+      let message = "Something went wrong. Please try again.";
+
+      if (err.code === "auth/email-already-in-use") {
+        message = "This email is already registered.";
+      } else if (err.code === "auth/weak-password") {
+        message = "Password should be at least 6 characters.";
+      } else if (err.code === "auth/invalid-email") {
+        message = "Invalid email address.";
+      }
+
+      showError(message);
     }
   };
+
   return (
-    <div className="flex flex-col h-full w-fit m-auto my-4 p-8 justify-center items-center gap-8 shadow-2xl border border-gray-200 rounded-2xl">
-      <input
-        className="border border-gray-300 rounded px-4 py-2 outline-orange-500"
-        name="name"
-        type="text"
-        placeholder="name"
-        onChange={inputHandler}
-        value={data.name}
-      />
-      <input
-        className="border border-gray-300 rounded px-4 py-2 outline-orange-500"
-        name="lastname"
-        type="text"
-        placeholder="lastname"
-        onChange={inputHandler}
-        value={data.lastname}
-      />
-      <input
-        className="border border-gray-300 rounded px-4 py-2 outline-orange-500"
-        name="age"
-        type="number"
-        placeholder="age"
-        onChange={inputHandler}
-        value={data.age}
-      />
-      <input
-        className="border border-gray-300 rounded px-4 py-2 outline-orange-500"
-        name="email"
-        type="email"
-        placeholder="email"
-        onChange={inputHandler}
-        value={data.email}
-      />
-      <input
-        className="border border-gray-300 rounded px-4 py-2 outline-orange-500"
-        name="password"
-        type="password"
-        placeholder="password"
-        onChange={inputHandler}
-        value={data.password}
-      />
-      <select
-        className="border border-gray-300 rounded px-4 py-2 outline-orange-500"
-        name="gender"
-        onChange={inputHandler}
-        value={data.gender === null ? "" : String(data.gender)}
-      >
-        <option value="true">male</option>
-        <option value="false">female</option>
-      </select>
-      <button
-        className="border bg-orange-500 py-4 px-15 rounded-full font-bold text-xl cursor-pointer hover:scale-105 transition duration-300 text-white border-gray-300 rounde"
-        onClick={submitHandler}
-      >
-        submit
-      </button>
-    </div>
+    <>
+      {/* ---------- ERROR MODAL ---------- */}
+      {modalOpen && (
+        <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
+          <div className="bg-white rounded-2xl shadow-xl p-6 w-full max-w-sm text-center">
+            <h2 className="text-xl font-bold text-red-500 mb-3">
+              Registration Failed
+            </h2>
+
+            <p className="text-gray-600 mb-6">{modalMessage}</p>
+
+            <button
+              onClick={() => setModalOpen(false)}
+              className="w-full py-2 rounded-lg bg-orange-500 text-white font-semibold hover:bg-orange-600 transition"
+            >
+              OK
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* ---------- REGISTER CARD ---------- */}
+      <div className="flex justify-center items-center min-h-screen px-4 bg-gray-50">
+        <form
+          onSubmit={submitHandler}
+          className="bg-white w-full max-w-md p-10 rounded-2xl shadow-2xl flex flex-col gap-5"
+        >
+          <div className="text-center">
+            <h2 className="text-3xl font-extrabold text-orange-500">
+              Create Account
+            </h2>
+            <p className="text-gray-500 mt-2">
+              Join IronFit and start training
+            </p>
+          </div>
+
+          <input
+            name="name"
+            placeholder="First Name"
+            onChange={inputHandler}
+            value={data.name}
+            className="input"
+          />
+
+          <input
+            name="lastname"
+            placeholder="Last Name"
+            onChange={inputHandler}
+            value={data.lastname}
+            className="input"
+          />
+
+          <input
+            name="age"
+            type="number"
+            placeholder="Age"
+            onChange={inputHandler}
+            value={data.age}
+            className="input"
+          />
+
+          <input
+            name="email"
+            type="email"
+            placeholder="Email"
+            onChange={inputHandler}
+            value={data.email}
+            className="input"
+          />
+
+          <input
+            name="password"
+            type="password"
+            placeholder="Password"
+            onChange={inputHandler}
+            value={data.password}
+            className="input"
+          />
+
+          <select
+            name="gender"
+            onChange={inputHandler}
+            value={data.gender}
+            className="input"
+          >
+            <option value="">Select Gender</option>
+            <option value="true">Male</option>
+            <option value="false">Female</option>
+          </select>
+
+          <button
+            type="submit"
+            className="w-full h-12 rounded-xl bg-orange-500 text-white font-bold text-lg hover:bg-orange-600 transition"
+          >
+            Register
+          </button>
+        </form>
+      </div>
+
+      {/* ---------- INPUT STYLE ---------- */}
+      <style jsx>{`
+        .input {
+          width: 100%;
+          height: 48px;
+          padding: 0 16px;
+          border-radius: 12px;
+          border: 1px solid #d1d5db;
+          outline-color: #f97316;
+        }
+      `}</style>
+    </>
   );
 }
 
-export default register;
+export default Register;

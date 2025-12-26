@@ -70,8 +70,6 @@ export default function Profile() {
         ...formData,
         age: Number(formData.age),
       });
-
-      alert("Profile updated successfully ✅");
       router.push("/dashbord");
     } catch (error) {
       console.error("Update failed:", error);

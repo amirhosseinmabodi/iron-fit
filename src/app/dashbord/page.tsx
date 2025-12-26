@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   collection,
   query,
@@ -7,13 +7,15 @@ import {
   getDocs,
   updateDoc,
   arrayRemove,
+  doc,
+  getDoc,
 } from "firebase/firestore";
 import { db } from "../../../lib/firebase";
-import { useEffect, useState } from "react";
 import { getCookie, deleteCookie } from "cookies-next";
-import { doc, getDoc } from "firebase/firestore";
+import Loading from "../components/Loading";
 
-async function getReservedclassesByUser(uid: string) {
+/* ---------- HELPERS ---------- */
+async function getReservedClassesByUser(uid: string) {
   const classesRef = collection(db, "classes");
   const q = query(classesRef, where("reservedUsers", "array-contains", uid));
   const snapshot = await getDocs(q);
@@ -22,118 +24,179 @@ async function getReservedclassesByUser(uid: string) {
     ...doc.data(),
   }));
 }
-function dashbord() {
-  const [classes, setclasses] = useState<any[]>([]);
-  const [userName, setUserName] = useState<string>("");
+
+function Dashboard() {
+  const [classes, setClasses] = useState<any[]>([]);
+  const [userName, setUserName] = useState("");
+
+  /* ---------- MODAL STATE ---------- */
+  const [modalOpen, setModalOpen] = useState(false);
+  const [modalMessage, setModalMessage] = useState("");
+  const [modalType, setModalType] = useState<"success" | "error">("success");
+
+  const showModal = (msg: string, type: "success" | "error") => {
+    setModalMessage(msg);
+    setModalType(type);
+    setModalOpen(true);
+  };
+
   useEffect(() => {
-    const uid = getCookie("UID");
-    async function getUserName(uid: string) {
-      const userRef = await doc(db, "users", uid);
+    const uid = getCookie("UID") as string;
+
+    if (!uid) {
+      window.location.href = "/login";
+      return;
+    }
+
+    async function fetchData() {
+      const reserved = await getReservedClassesByUser(uid);
+      setClasses(reserved);
+
+      const userRef = doc(db, "users", uid);
       const userSnap = await getDoc(userRef);
       if (userSnap.exists()) {
         const data = userSnap.data();
-        return `${data.name} ${data.lastname}`;
-      } else {
-        return null;
+        setUserName(`${data.name} ${data.lastname}`);
       }
     }
-    async function fetchData() {
-      const reserved = await getReservedclassesByUser(uid as string);
-      setclasses(reserved);
-      const name = await getUserName(uid as string);
-      console.log(name);
-      if (name) setUserName(name);
-    }
+
     fetchData();
   }, []);
+
   const logoutHandler = () => {
     deleteCookie("UID");
     window.location.href = "/login";
   };
-  async function cancelHandler(classNameId: string, userId: string) {
+
+  async function cancelHandler(classId: string) {
     try {
-      const classNameRef = doc(db, "classes", classNameId);
-      await updateDoc(classNameRef, {
-        reservedUsers: arrayRemove(userId),
+      const uid = getCookie("UID") as string;
+      const classRef = doc(db, "classes", classId);
+
+      await updateDoc(classRef, {
+        reservedUsers: arrayRemove(uid),
       });
-      alert("remove is succesful");
-      window.location.reload();
+
+      setClasses((prev) => prev.filter((c) => c.id !== classId));
+      showModal("Reservation cancelled successfully ✅", "success");
     } catch (error) {
-      console.error("error: ", error);
+      showModal("Failed to cancel reservation ❌", "error");
     }
   }
 
   return (
-    <div className="p-4">
-      <h2 className="text-4xl text-center font-bold">{userName}</h2>
-
-      <div className="flex min-h-screen gap-4">
-        <div className="w-1/4 min-w-[200px] bg-gray-800 text-white p-4">
-          <h2 className="text-xl font-semibold mb-4">Dashboard Menu</h2>
-          <ul className="space-y-2">
-            <li className="hover:bg-orange-500 cursor-pointer p-2 rounded">classes</li>
-            <li className="hover:bg-orange-500 cursor-pointer p-2 rounded" onClick={() => {
-               window.location.href = "/dashbord/profile";
-            }}>Profile</li>
-            <li
-              className="hover:bg-orange-500 cursor-pointer p-2 rounded"
-              onClick={logoutHandler}
+    <>
+      {/* ---------- MODAL ---------- */}
+      {modalOpen && (
+        <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
+          <div className="bg-white rounded-2xl shadow-xl p-6 w-full max-w-sm text-center">
+            <h2
+              className={`text-xl font-bold mb-3 ${
+                modalType === "success"
+                  ? "text-green-500"
+                  : "text-red-500"
+              }`}
             >
-              Logout
-            </li>
-          </ul>
+              {modalType === "success" ? "Done" : "Error"}
+            </h2>
+
+            <p className="text-gray-600 mb-6">{modalMessage}</p>
+
+            <button
+              onClick={() => setModalOpen(false)}
+              className="w-full py-2 rounded-lg bg-orange-500 text-white font-semibold hover:bg-orange-600 transition"
+            >
+              OK
+            </button>
+          </div>
         </div>
-        <div className="flex-1">
-          <h3 className="text-3xl font-extrabold p-8 text-gray-800">
-            Reserved Classes 🏋🏻‍♂️
-          </h3>
+      )}
 
-          {classes.length === 0 ? (
-            <div className="text-center text-gray-500 mt-20">
-              <p className="text-xl">No reserved classes found.</p>
-              <p className="text-sm italic mt-2">Maybe time to book one? 😅</p>
-            </div>
-          ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 p-4">
-              {classes.map((cls) => (
-                <div
-                  key={cls.id}
-                  className="bg-white shadow-md rounded-xl p-6 hover:shadow-xl transition-all flex flex-col justify-between"
-                >
-                  <div className="mb-4">
-                    <h3 className="text-center text-3xl font-bold text-orange-600 mb-3">
-                      {cls.name}
-                    </h3>
-                    <p className="text-center text-gray-600 font-semibold">
-                      {cls.date?.toDate().toLocaleString()}
-                    </p>
-                  </div>
+      {/* ---------- DASHBOARD ---------- */}
+      <div className="min-h-screen bg-gray-50">
+        <header className="bg-white shadow p-6 text-center">
+          <h2 className="text-3xl font-extrabold text-gray-800">
+            Welcome, {userName}
+          </h2>
+        </header>
 
-                  <div className="text-center text-gray-700 mb-6">
-                    <p>
-                      <span className="font-bold">Coach:</span> {cls.coach}
-                    </p>
-                    <p>
-                      <span className="font-bold">Price:</span> {cls.price}$
-                    </p>
-                  </div>
+        <div className="flex">
+          {/* ---------- SIDEBAR ---------- */}
+          <aside className="w-64 bg-gray-900 text-white min-h-screen p-6">
+            <h3 className="text-xl font-bold mb-6">Dashboard</h3>
+            <ul className="space-y-3">
+              <li className="p-3 rounded bg-orange-500">Classes</li>
+              <li
+                className="p-3 rounded hover:bg-gray-700 cursor-pointer"
+                onClick={() => (window.location.href = "/dashbord/profile")}
+              >
+                Profile
+              </li>
+              <li
+                className="p-3 rounded hover:bg-red-600 cursor-pointer"
+                onClick={logoutHandler}
+              >
+                Logout
+              </li>
+            </ul>
+          </aside>
 
-                  <button
-                    onClick={() =>
-                      cancelHandler(cls.id, getCookie("UID") as string)
-                    }
-                    className="w-full py-3 bg-red-500 hover:bg-red-600 text-white font-bold rounded-lg text-lg transition-colors"
+          {/* ---------- CONTENT ---------- */}
+          <main className="flex-1 p-8">
+            <h3 className="text-3xl font-bold mb-8 text-gray-800">
+              Reserved Classes 🏋️
+            </h3>
+
+            {classes.length === 0 ? (
+              <div className="text-center text-gray-500 mt-20">
+                <p className="text-xl">No reserved classes yet</p>
+                <p className="text-sm italic mt-2">
+                  Time to break a sweat 💪
+                </p>
+              </div>
+            ) : (
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {classes.map((cls) => (
+                  <div
+                    key={cls.id}
+                    className="bg-white rounded-2xl shadow-lg p-6 flex flex-col justify-between hover:shadow-xl transition"
                   >
-                    Cancel Reservation
-                  </button>
-                </div>
-              ))}
-            </div>
-          )}
+                    <div>
+                      <h4 className="text-2xl font-bold text-orange-500 text-center mb-2">
+                        {cls.name}
+                      </h4>
+
+                      <p className="text-center text-gray-600 mb-4">
+                        {cls.date?.toDate().toLocaleString()}
+                      </p>
+
+                      <div className="text-gray-700 space-y-1 text-center">
+                        <p>
+                          <span className="font-semibold">Coach:</span>{" "}
+                          {cls.coach}
+                        </p>
+                        <p>
+                          <span className="font-semibold">Price:</span>{" "}
+                          {cls.price}$
+                        </p>
+                      </div>
+                    </div>
+
+                    <button
+                      onClick={() => cancelHandler(cls.id)}
+                      className="mt-6 w-full py-3 bg-red-500 hover:bg-red-600 text-white font-bold rounded-xl transition"
+                    >
+                      Cancel Reservation
+                    </button>
+                  </div>
+                ))}
+              </div>
+            )}
+          </main>
         </div>
       </div>
-    </div>
+    </>
   );
 }
 
-export default dashbord;
+export default Dashboard;

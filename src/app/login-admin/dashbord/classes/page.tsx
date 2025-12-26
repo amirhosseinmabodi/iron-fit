@@ -51,6 +51,7 @@ export default function ClassesList() {
     });
 
     setSuccessModal(true);
+    window.location.reload()
   };
 
   const confirmDelete = async () => {
@@ -63,7 +64,6 @@ export default function ClassesList() {
   return (
     <>
       <div className="p-8 space-y-12 bg-gray-50 min-h-screen">
-
         {/* Header */}
         <div className="flex justify-between items-center">
           <h1 className="text-3xl font-extrabold text-orange-500">
@@ -71,9 +71,10 @@ export default function ClassesList() {
           </h1>
           <button
             onClick={() => router.push("/login-admin/dashbord")}
-            className="text-sm text-gray-500 hover:text-orange-500 transition"
+            className="px-4 py-2 rounded-lg border border-orange-500 text-orange-500
+                     hover:bg-orange-500 hover:text-white transition"
           >
-            ← Back to dashboard
+            ← Dashboard
           </button>
         </div>
 
@@ -86,18 +87,62 @@ export default function ClassesList() {
             Create New Class
           </h2>
 
-          <Input label="Class Name" name="name" value={formData.name} onChange={handleChange} />
-          <Textarea label="Description" name="description" value={formData.description} onChange={handleChange} />
-          <Input label="Coach" name="coach" value={formData.coach} onChange={handleChange} />
-          <Input type="datetime-local" label="Date & Time" name="date" value={formData.date} onChange={handleChange} />
+          <Input
+            label="Class Name"
+            name="name"
+            value={formData.name}
+            onChange={handleChange}
+          />
+          <Textarea
+            label="Description"
+            name="description"
+            value={formData.description}
+            onChange={handleChange}
+          />
+          <Input
+            label="Coach"
+            name="coach"
+            value={formData.coach}
+            onChange={handleChange}
+          />
+          <Input
+            type="datetime-local"
+            label="Date & Time"
+            name="date"
+            value={formData.date}
+            onChange={handleChange}
+          />
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <Input type="number" label="Duration (min)" name="duration" value={formData.duration} onChange={handleChange} />
-            <Input type="number" label="Capacity" name="capacity" value={formData.capacity} onChange={handleChange} />
-            <Input type="number" label="Price ($)" name="price" value={formData.price} onChange={handleChange} />
+            <Input
+              type="number"
+              label="Duration (min)"
+              name="duration"
+              value={formData.duration}
+              onChange={handleChange}
+            />
+            <Input
+              type="number"
+              label="Capacity"
+              name="capacity"
+              value={formData.capacity}
+              onChange={handleChange}
+            />
+            <Input
+              type="number"
+              label="Price ($)"
+              name="price"
+              value={formData.price}
+              onChange={handleChange}
+            />
           </div>
 
-          <Input label="Image URL" name="image" value={formData.image} onChange={handleChange} />
+          <Input
+            label="Image URL"
+            name="image"
+            value={formData.image}
+            onChange={handleChange}
+          />
 
           <button className="w-full bg-orange-500 hover:bg-orange-600 text-white py-3 rounded-xl font-semibold transition">
             Save Class
@@ -119,7 +164,7 @@ export default function ClassesList() {
               </tr>
             </thead>
 
-            <tbody>
+            <tbody className="text-center">
               {classes.map((cls: IGymClass) => (
                 <tr
                   key={cls.id}
@@ -184,12 +229,8 @@ export default function ClassesList() {
 
       {/* Delete Modal */}
       <Modal open={!!deleteId}>
-        <h3 className="text-xl font-bold text-red-500 mb-2">
-          Delete Class
-        </h3>
-        <p className="text-gray-600 mb-6">
-          This action cannot be undone.
-        </p>
+        <h3 className="text-xl font-bold text-red-500 mb-2">Delete Class</h3>
+        <p className="text-gray-600 mb-6">This action cannot be undone.</p>
         <div className="flex gap-3">
           <button
             onClick={() => setDeleteId(null)}
